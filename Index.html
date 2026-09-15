@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart ATM</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- CREATE ACCOUNT / LOGIN -->
+
+    <div class="container" id="authPage">
+
+        <div class="atm-logo">
+
+            <div class="chip">▣</div>
+
+            <h1>SMART ATM</h1>
+
+            <p>Secure • Simple • Smart</p>
+
+        </div>
+
+
+        <div class="auth-card">
+
+            <!-- CREATE ACCOUNT -->
+
+            <div id="createSection">
+
+                <h2>Create Account</h2>
+
+                <p class="subtitle">
+                    Create your ATM account
+                </p>
+
+
+                <input type="number"
+                       id="accountNumber"
+                       placeholder="Enter Account Number">
+
+
+                <input type="password"
+                       id="createPassword"
+                       placeholder="Create Main PIN">
+
+
+                <input type="password"
+                       id="createSecondPassword"
+                       placeholder="Create Security PIN">
+
+
+                <button onclick="createAccount()">
+                    Create Account
+                </button>
+
+
+                <p id="createMessage"></p>
+
+
+                <div class="switch">
+
+                    Already have an account?
+
+                    <span onclick="showLogin()">
+                        Login
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGIN -->
+
+            <div id="loginSection" class="hidden">
+
+                <h2>Welcome Back</h2>
+
+                <p class="subtitle">
+                    Login to your ATM account
+                </p>
+
+
+                <input type="number"
+                       id="loginAccount"
+                       placeholder="Enter Account Number">
+
+
+                <input type="password"
+                       id="loginPassword"
+                       placeholder="Enter Main PIN">
+
+
+                <button onclick="login()">
+                    Login
+                </button>
+
+
+                <p id="loginMessage"></p>
+
+
+                <div class="switch">
+
+                    Don't have an account?
+
+                    <span onclick="showCreate()">
+                        Create Account
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ATM DASHBOARD -->
+
+    <div class="dashboard hidden"
+         id="dashboard">
+
+
+        <header>
+
+            <div>
+
+                <h1>SMART ATM</h1>
+
+                <p>
+                    Welcome to your secure banking dashboard
+                </p>
+
+            </div>
+
+
+            <button class="logout"
+                    onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </header>
+
+
+
+        <!-- BALANCE -->
+
+        <div class="balance-card">
+
+            <div>
+
+                <p>AVAILABLE BALANCE</p>
+
+                <h2>
+                    ₹ <span id="balance">0</span>
+                </h2>
+
+            </div>
+
+
+            <div class="card-chip">
+                ▣
+            </div>
+
+        </div>
+
+
+
+        <!-- TRANSACTION OPTIONS -->
+
+        <div class="menu">
+
+
+            <div class="menu-card"
+                 onclick="openDeposit()">
+
+                <div class="icon deposit-icon">
+                    ↓
+                </div>
+
+                <h3>Deposit</h3>
+
+                <p>
+                    Add money to your account
+                </p>
+
+            </div>
+
+
+
+            <div class="menu-card"
+                 onclick="openWithdraw()">
+
+                <div class="icon withdraw-icon">
+                    ↑
+                </div>
+
+                <h3>Withdraw</h3>
+
+                <p>
+                    Withdraw money from account
+                </p>
+
+            </div>
+
+
+
+            <div class="menu-card"
+                 onclick="displayBalance()">
+
+                <div class="icon balance-icon">
+                    ₹
+                </div>
+
+                <h3>Display Balance</h3>
+
+                <p>
+                    Check your current balance
+                </p>
+
+            </div>
+
+
+
+            <div class="menu-card"
+                 onclick="openStatement()">
+
+                <div class="icon statement-icon">
+                    ▤
+                </div>
+
+                <h3>Mini Statement</h3>
+
+                <p>
+                    View your transactions
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TRANSACTION AREA -->
+
+        <div class="transaction-box hidden"
+             id="transactionBox">
+
+
+            <button class="close"
+                    onclick="closeTransaction()">
+
+                ×
+
+            </button>
+
+
+            <h2 id="transactionTitle"></h2>
+
+
+            <input type="number"
+                   id="amount"
+                   placeholder="Enter Amount"
+                   oninput="checkHighValue()">
+
+
+            <!-- MAIN PIN -->
+
+            <input type="password"
+                   id="transactionPassword"
+                   placeholder="Enter Main PIN">
+
+
+            <!-- SECOND SECURITY PIN -->
+
+            <input type="password"
+                   id="secondPassword"
+                   hidden
+                   placeholder="Enter Security PIN">
+
+
+            <p id="securityMessage"></p>
+
+
+            <button onclick="performTransaction()"
+                    id="transactionButton">
+
+                Confirm
+
+            </button>
+
+
+            <p id="transactionMessage"></p>
+
+        </div>
+
+
+
+        <!-- FRAUD CONFIRMATION -->
+
+        <div class="transaction-box hidden"
+             id="fraudBox">
+
+            <h2>🚨 Suspicious Activity</h2>
+
+
+            <p>
+                3 transactions detected within 30 seconds.
+            </p>
+
+
+            <p>
+                Is this transaction being made by you?
+            </p>
+
+
+            <button onclick="confirmFraudTransaction()">
+                YES, IT'S ME
+            </button>
+
+
+            <button onclick="rejectFraudTransaction()">
+                NO, BLOCK IT
+            </button>
+
+
+            <p id="fraudMessage"></p>
+
+        </div>
+
+
+
+        <!-- MINI STATEMENT -->
+
+        <div class="statement-box hidden"
+             id="statementBox">
+
+
+            <button class="close"
+                    onclick="closeStatement()">
+
+                ×
+
+            </button>
+
+
+            <h2>Mini Statement</h2>
+
+
+            <div id="statementList"></div>
+
+
+            <div class="statement-total">
+
+                Current Balance:
+
+                <strong>
+                    ₹ <span id="statementBalance">0</span>
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- EMERGENCY LOCK -->
+
+        <div class="emergency-area">
+
+            <button class="emergency-button"
+                    onclick="emergencyLock()">
+
+                🚨 <h4>EMERGENCY LOCK</h4>
+
+            </button>
+
+
+            <p>
+                Lock your account immediately
+                during an emergency.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
